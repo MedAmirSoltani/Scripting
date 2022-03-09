@@ -1,7 +1,7 @@
-#!/bash/shell
-
+#!/bin/bash
 script()
 {
+#choisir loption avec case
 case $option in
 h)
 HELP
@@ -33,67 +33,89 @@ less About.txt
 ;;
 m)
 Menu
+;;
+g)
+bash yad.sh
+;;
+*)
+show_usage
+;;
 esac
 
 }
 Menu()
-{
-select item in "-t" "-T" "-n" "-N" "-d" "-s" "-h" "-v" "-g" "-e"
+{ #animation et appel des fonctions
+echo -ne "\e[31;5m        M E N U\e[0m 
+"
+select item in "Rennomer Miniscule" "Rennomer Majiscule" "Enlever extension" "Ajouter _d" "Ajouter extension" "Afficher help" "Afficher Auteurs" "Afficher Menu Graphique" "-g" "-e" 
 do
-echo "Choose your option $REPLY:item"
-echo -ne "
-\e[31;5m        M E N U\e[0m"
+echo "Your Option is :  $REPLY "
 case $REPLY in
 1) 
-echo -ne "
-\e[4;3mRennomer Miniscule\e[0m"
+echo "D0nnez le nom du rep/fichier :"
+read x
+Rename_Min
+;;
 2)
-echo -ne "
-\e[4;3mRennomer Majiscule\e[0m"
+echo "D0nnez le nom du rep/fichier :"
+read x
+Rename_Maj
+;;
 3)
-echo -ne "
-\e[4;3mEnlever extension\e[0m"
+echo "D0nnez le nom du rep/fichier :"
+read x
+Remove_Ex
+;;
 4)
-echo -ne "
-\e[4;3mEnlever espaces\e[0m"
+echo "D0nnez le nom du rep/fichier :"
+read r
+ADD_D
+;;
 5)
-echo -ne "
-\e[4;3mRAjouter _d\e[0m"
+echo "D0nnez le nom du rep/fichier :"
+read x
+echo "D0nnez l'extension  :"
+read y
+ADD_EX $x $y
+;;
 6)
-echo -ne "
-\e[4;3mAjouter extension\e[0m"
+HELP
+;;
 7)
-echo -ne "
-\e[4;3mAfficher help\e[0m"
+less About.txt
+;;
 8)
-echo -ne "
-\e[4;3mAfficher Auteurs\e[0m"
+echo "interface graphique"
+;;
 9)
-echo -ne "
-\e[4;3mAfficher Menu Graphique\e[0m"
+bash yad.sh
+;;
 10)
-echo -ne "
-\e[4;3mExit\e[0m
-('Choose an option:') "
+exit 0
+;;
+*)
+echo "option doesnt exist ^^"
+;;
 esac
 done
+
 }
 
-show_usage()
+show_usage() #guide
 {
   echo " rename.sh: [-h|--help] [-T] [-t] [-n] [-N] [-d] [-m] [-s] chemin.."
 };
 HELP()
 {
-less README.txt
+less README.txt #less to execute readme
 }
-Rename_Min()
+Rename_Min() 
 {
 if [ ! -e "$x" ]; then
 			echo -e "\e[1;31m Erreur en [$x]: \e[0m"
 			echo "Reprtoire\Fichier non existant"
 	elif [ -f "$x" ];then	
-    y=`dirname "${x}"`/`basename "${x}" | tr '[A-Z]' '[a-z]'`
+    y=`dirname "${x}"`/`basename "${x}" | tr '[A-Z]' '[a-z]'` #dirname= directory basename=esm lfichier
     if [ "${x}" != "${y}" ]
     then
         [ ! -e "${y}" ] && mv "$x" "$y" || echo -e "\e[1;33m $x was not renamed \e[0m"
@@ -113,7 +135,7 @@ if [ ! -e "$x" ]; then
 			echo -e "\e[1;31m Erreur en [$x]: \e[0m"
 			echo "Reprtoire\Fichier non existant"
 	elif [ -f "$x" ];then	
-    y=`dirname "${x}"`/`basename "${x}" | tr '[a-z]' '[A-Z]'`
+    y=`dirname "${x}"`/`basename "${x}" | tr '[a-z]' '[A-Z]'` #dirname= directory basename=esm lfichier
     if [ "${x}" != "${y}" ]
     then
         [ ! -e "${y}" ] && mv "$x" "$y" || echo -e "\e[1;33m $x was not renamed \e[0m"
@@ -137,7 +159,7 @@ if [ ! -e $x ];then
 	echo -e "\e[1;31m Erreur en [$x]: \e[0m"
 			echo "Fichier non existant"
 	elif [ -f $x ];then
-	D=`dirname "${x}"`/`basename "${x}" | cut -f 1 -d '.'`
+	D=`dirname "${x}"`/`basename "${x}" | cut -f 1 -d '.'` #dirname= directory basename=esm lfichier
 	if [ "${x}" != "${D}" ]
     then
         [ ! -e "${D}" ] && mv -T "${x}" "${D}" || echo -e "\e[1;33m $x was not renamed \e[0m"
@@ -149,7 +171,7 @@ if [ ! -e $x ];then
 }
 ADD_D()
 {
-if [ ! -e "$r" ]; then
+if [ ! -e "$r" ]; then #-e si il existe
 		echo -e "\e[1;31m Erreur en [$r]: \e[0m"
 			echo "Reprtoire non existant"
 	elif [ -f "$r" ];then	
@@ -169,7 +191,7 @@ ADD_EX()
 	elif [ -d "$1" ];then	
     echo "Erreur en [$1]: Entrez un Fichier valide"
     elif [ -f "$1" ];then	
-    DST=`dirname "${1}"`/`basename "${1}"`".""$2"
+    DST=`dirname "${1}"`/`basename "${1}"`".""$2" #dirname= directory basename=esm lfichier
     if [ "${2}" != "${DST}" ]
     then
         [ ! -e "${DST}" ] && mv -T "${1}" "${DST}" || echo -e "\e[1;33m $1 was not renamed \e[0m"
